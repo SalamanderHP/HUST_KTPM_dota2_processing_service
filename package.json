@@ -1,0 +1,29 @@
+{
+  "name": "hust_ktpm_dota2_processing_service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SalamanderHP/HUST_KTPM_dota2_processing_service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SalamanderHP/HUST_KTPM_dota2_processing_service/issues"
+  },
+  "homepage": "https://github.com/SalamanderHP/HUST_KTPM_dota2_processing_service#readme",
+  "description": "",
+  "dependencies": {
+    "@google-cloud/pubsub": "^4.11.0",
+    "axios": "^1.8.4",
+    "cron": "^4.1.4",
+    "dotenv": "^16.4.7",
+    "mongoose": "^8.13.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.9",
+    "pm2": "^6.0.5"
+  }
+}
