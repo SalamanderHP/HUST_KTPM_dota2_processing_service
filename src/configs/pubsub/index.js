@@ -32,7 +32,7 @@ const publishMessage = async (topicName, message, customAttributes = {}) => {
   }
 };
 
-const pullMessage = async (maxMessages = 50) => {
+const pullMessage = async (maxMessages = 50, isSendAck = true) => {
   try {
     const request = {
       subscription: subscriptionPath,
@@ -40,8 +40,19 @@ const pullMessage = async (maxMessages = 50) => {
     };
     const [response] = await subscriber.pull(request);
     if (response.receivedMessages.length === 0) {
-      console.log("📭 No new messages.");
+      console.log("No new messages.");
       return;
+    }
+    if (isSendAck) {
+      const ackIds = [];
+      response.receivedMessages.forEach(async ({message, ackId}) => {
+        ackIds.push(ackId);
+        await subscriber.acknowledge({
+          subscription: subscriptionPath,
+          ackIds,
+        });
+        console.log("All messages acknowledged.");
+      });
     }
 
     return response.receivedMessages;
