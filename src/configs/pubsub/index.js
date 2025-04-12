@@ -1,22 +1,56 @@
 require("dotenv").config();
-const {PubSub} = require("@google-cloud/pubsub");
-const {PUBSUB_PROJECT_ID} = require("../../consts/pubsub.const");
+const {PubSub, v1} = require("@google-cloud/pubsub");
+const {
+  PUBSUB_PROJECT_ID,
+  DOTA2_SUBSCRIPTION_NAME,
+} = require("../../consts/pubsub.const");
 const pubSubClient = new PubSub({
   projectId: PUBSUB_PROJECT_ID,
   keyFilename: `./keys/${process.env.GOOGLE_APPLICATION_CREDENTIALS}`,
 });
+const subscriber = new v1.SubscriberClient({
+  projectId: PUBSUB_PROJECT_ID,
+  keyFilename: `./keys/${process.env.GOOGLE_APPLICATION_CREDENTIALS}`,
+});
+const subscriptionPath = subscriber.subscriptionPath(
+  PUBSUB_PROJECT_ID,
+  DOTA2_SUBSCRIPTION_NAME
+);
 
 const publishMessage = async (topicName, message, customAttributes = {}) => {
-  const topic = pubSubClient.topic(topicName);
-  const msg = JSON.stringify(message);
-  const msgBuffer = Buffer.from(msg);
-  const messageId = await topic.publishMessage({
-    data: msgBuffer,
-    attributes: customAttributes,
-  });
-  console.log(`Message ${messageId} published.`);
+  try {
+    const topic = pubSubClient.topic(topicName);
+    const msg = JSON.stringify(message);
+    const msgBuffer = Buffer.from(msg);
+    const messageId = await topic.publishMessage({
+      data: msgBuffer,
+      attributes: customAttributes,
+    });
+    console.log(`Message ${messageId} published.`);
+  } catch (error) {
+    console.log("Error publish message", error);
+  }
+};
+
+const pullMessage = async (maxMessages = 50) => {
+  try {
+    const request = {
+      subscription: subscriptionPath,
+      maxMessages: maxMessages,
+    };
+    const [response] = await subscriber.pull(request);
+    if (response.receivedMessages.length === 0) {
+      console.log("📭 No new messages.");
+      return;
+    }
+
+    return response.receivedMessages;
+  } catch (error) {
+    console.log("Error pulling messages", error);
+  }
 };
 
 module.exports = {
   publishMessage,
+  pullMessage,
 };

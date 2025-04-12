@@ -1,0 +1,10 @@
+{
+  "apps": [
+      {
+          "name": "DOTA2-pull-service",
+          "script": "src/jobs/index.js",
+          "max_memory_restart": "500M",
+          "watch": false
+      }
+  ]
+}
