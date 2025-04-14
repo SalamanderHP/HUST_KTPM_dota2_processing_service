@@ -33,4 +33,7 @@ const GameAccounts = new Schema(
   }
 );
 
-module.exports = mongoose.model("GameAccount", GameAccounts);
+const GameAccount =
+  mongoose.models.GameAccount || mongoose.model("GameAccount", GameAccounts);
+
+module.exports = GameAccount;

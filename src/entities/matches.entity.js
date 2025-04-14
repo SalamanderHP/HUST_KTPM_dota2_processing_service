@@ -21,7 +21,6 @@ const Matches = new Schema(
     match_details: {
       type: Schema.Types.ObjectId,
       ref: "MatchDetail",
-      required: true,
     },
   },
   {
@@ -29,4 +28,6 @@ const Matches = new Schema(
   }
 );
 
-module.exports = mongoose.model("Match", Matches);
+const Match = mongoose.models.Match || mongoose.model("Match", Matches);
+
+module.exports = Match;

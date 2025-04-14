@@ -14,7 +14,12 @@ const getMatchDetails = async (matchId) => {
     let result = await get(url, false, InstanceType.OPEN_DOTA);
     return result;
   } catch (error) {
-    throw error;
+    if (error?.status == 404) {
+      console.log("Not found");
+      return;
+    }
+
+    console.log(error);
   }
 };
 
@@ -31,7 +36,12 @@ const getPlayerDetailOpenDota = async (accountId) => {
     let result = await get(url, false, InstanceType.OPEN_DOTA);
     return result;
   } catch (error) {
-    throw error;
+    if (error?.status == 404) {
+      console.log("Not found");
+      return;
+    }
+
+    console.log("API error");
   }
 };
 
@@ -48,7 +58,12 @@ const getPlayerMatches = async (accountId, limit = 20) => {
     let result = await get(url, false, InstanceType.OPEN_DOTA);
     return result?.data;
   } catch (error) {
-    throw error;
+    if (error?.status == 404) {
+      console.log("Not found");
+      return;
+    }
+
+    console.log(error);
   }
 };
 

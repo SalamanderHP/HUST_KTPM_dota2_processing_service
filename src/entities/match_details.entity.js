@@ -23,4 +23,7 @@ const MatcheDetails = new Schema(
   }
 );
 
-module.exports = mongoose.model("Match", MatcheDetails);
+const MatchDetail =
+  mongoose.models.MatchDetail || mongoose.model("MatchDetail", MatcheDetails);
+
+module.exports = MatchDetail;
