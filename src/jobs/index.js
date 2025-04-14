@@ -34,6 +34,7 @@ const transformMatchDetail = (matchData, matchInfo) => {
         win: userDataFound?.win,
         duration: matchData?.duration,
         game_mode: matchData?.game_mode,
+        start_time: matchData?.start_time,
       },
     },
   };
