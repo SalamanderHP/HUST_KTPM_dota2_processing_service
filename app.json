@@ -1,10 +1,16 @@
 {
   "apps": [
       {
-          "name": "DOTA2-pull-service",
-          "script": "src/jobs/index.js",
+          "name": "DOTA2-processing-service",
+          "script": "src/jobs/dota/index.js",
           "max_memory_restart": "500M",
           "watch": false
-      }
+      },
+      {
+        "name": "LOL-processing-service",
+        "script": "src/jobs/lol/index.js",
+        "max_memory_restart": "500M",
+        "watch": false
+    }
   ]
 }

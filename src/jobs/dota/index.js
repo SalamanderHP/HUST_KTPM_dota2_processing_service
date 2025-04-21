@@ -1,11 +1,12 @@
 require("dotenv").config();
 const CronJob = require("cron").CronJob;
-const db = require("../configs/db/mongo/index");
-const {getMatchDetails} = require("../configs/dota/dota.api");
-const {pullMessage} = require("../configs/pubsub");
-const {RETRIEVING_SERVICE_SENDER} = require("../consts/pubsub.const");
-const MatchDetails = require("../entities/match_details.entity");
-const Match = require("../entities/matches.entity");
+const {SUBSCRIPTION} = require("../../consts/pubsub.const");
+const db = require("../../configs/db/mongo/index");
+const {getMatchDetails} = require("../../configs/dota/dota.api");
+const {pullMessage} = require("../../configs/pubsub");
+const {RETRIEVING_SERVICE_SENDER} = require("../../consts/pubsub.const");
+const MatchDetails = require("../../entities/match_details.entity");
+const Match = require("../../entities/matches.entity");
 db.connect();
 
 const transformMatchDetail = (matchData, matchInfo) => {
@@ -58,7 +59,7 @@ const createMatchAndDetail = async (matchData, matchDetailData) => {
 
 const job = new CronJob("*/10 * * * * *", async function () {
   console.log("Pulling DOTA2 data...");
-  let data = await pullMessage(50, false);
+  let data = await pullMessage(SUBSCRIPTION.DOTA, 50, false);
   if (!data) return;
 
   try {

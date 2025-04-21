@@ -3,6 +3,8 @@ const {PubSub, v1} = require("@google-cloud/pubsub");
 const {
   PUBSUB_PROJECT_ID,
   DOTA2_SUBSCRIPTION_NAME,
+  SUBSCRIPTION,
+  LOL_SUBSCRIPTION_NAME,
 } = require("../../consts/pubsub.const");
 const pubSubClient = new PubSub({
   projectId: PUBSUB_PROJECT_ID,
@@ -12,9 +14,13 @@ const subscriber = new v1.SubscriberClient({
   projectId: PUBSUB_PROJECT_ID,
   keyFilename: `./keys/${process.env.GOOGLE_APPLICATION_CREDENTIALS}`,
 });
-const subscriptionPath = subscriber.subscriptionPath(
+const subscriptionPathDota = subscriber.subscriptionPath(
   PUBSUB_PROJECT_ID,
   DOTA2_SUBSCRIPTION_NAME
+);
+const subscriptionPathLol = subscriber.subscriptionPath(
+  PUBSUB_PROJECT_ID,
+  LOL_SUBSCRIPTION_NAME
 );
 
 const publishMessage = async (topicName, message, customAttributes = {}) => {
@@ -32,10 +38,17 @@ const publishMessage = async (topicName, message, customAttributes = {}) => {
   }
 };
 
-const pullMessage = async (maxMessages = 50, isSendAck = true) => {
+const pullMessage = async (
+  subscription,
+  maxMessages = 50,
+  isSendAck = true
+) => {
   try {
     const request = {
-      subscription: subscriptionPath,
+      subscription:
+        subscription == SUBSCRIPTION.DOTA
+          ? subscriptionPathDota
+          : subscriptionPathLol,
       maxMessages: maxMessages,
     };
     const [response] = await subscriber.pull(request);
@@ -48,7 +61,10 @@ const pullMessage = async (maxMessages = 50, isSendAck = true) => {
       response.receivedMessages.forEach(async ({message, ackId}) => {
         ackIds.push(ackId);
         await subscriber.acknowledge({
-          subscription: subscriptionPath,
+          subscription:
+            subscription == SUBSCRIPTION.DOTA
+              ? subscriptionPathDota
+              : subscriptionPathLol,
           ackIds,
         });
         console.log("All messages acknowledged.");

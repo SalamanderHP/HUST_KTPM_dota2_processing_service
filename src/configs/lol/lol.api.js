@@ -1,4 +1,7 @@
 const {LOL_API_KEY} = require("../../consts/api.const");
+const {
+  generateRandomDetailLolMatch,
+} = require("../../utils/generate_publish_data.util");
 const {get} = require("./api.lib");
 
 // https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/VN2_809074725/ids?start=0&count=20&api_key=
@@ -16,14 +19,15 @@ const getLolUserMatches = async (puuid) => {
   }
 };
 
-const getLolMatchDetails = async (matchId) => {
+const getLolMatchDetails = async (accountId, matchId) => {
   try {
     if (!matchId) {
       return null;
     }
 
-    let url = `/lol/match/v5/matches/${matchId}`;
-    let result = await get(url);
+    // let url = `/lol/match/v5/matches/${matchId}`;
+    // let result = await get(url);
+    let result = generateRandomDetailLolMatch(accountId, matchId);
     return result;
   } catch (error) {
     throw error;
