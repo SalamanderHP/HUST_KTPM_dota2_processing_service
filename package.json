@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "pm2 start app.json",
+    "stop": "pm2 stop app.json",
+    "logs": "pm2 logs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
